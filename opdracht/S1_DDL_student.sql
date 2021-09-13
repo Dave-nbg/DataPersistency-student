@@ -107,6 +107,10 @@ insert into adressen(postcode,huisnummer,ingangsdatum,einddatum,telefoon,med_nr)
 -- 'VERKOPER' heeft, anders moet de commissie NULL zijn. Schrijf hiervoor een beperkingsregel. Gebruik onderstaande
 -- 'illegale' INSERTs om je beperkingsregel te controleren.
 
+alter table medewerkers add constraint check_not_null_not_verkoper check (not(functie != 'VERKOPER' and comm is not null))
+alter table medewerkers add constraint check_null_and_verkoper check (not(functie = 'VERKOPER' and comm is null))
+
+
 INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm)
 VALUES (8001, 'MULLER', 'TJ', 'TRAINER', 7566, '1982-08-18', 2000, 500);
 

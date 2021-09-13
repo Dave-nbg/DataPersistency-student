@@ -134,12 +134,13 @@ delete from medewerkers where naam= 'ALDERS'
 -- Je wordt hoofd van de nieuwe afdeling 'FINANCIEN' te Leerdam,
 -- onder de hoede van De Koning. Kies een personeelnummer boven de 8000.
 -- Zorg voor de juiste invoer van deze gegevens.
-INSERT
+           INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
 
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-delete from medewerkers where naam= 'ALDERS'
+insert into medewerkers (mnr,naam,voorl,functie,chef,gbdatum,maandsal,comm,afd,geslacht) values (8005,'NIEBERG','DS','FINANCIEN',7839,'2002-03-26',9999,null,40,'M')
+
 
 
 -- -------------------------[ HU TESTRAAMWERK ]--------------------------------
