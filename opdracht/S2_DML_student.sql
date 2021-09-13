@@ -25,7 +25,7 @@
 -- Lever je werk pas in op Canvas als alle tests slagen. Draai daarna
 -- alle wijzigingen in de database terug met de queries helemaal onderaan.
 -- ------------------------------------------------------------------------
-
+--
 
 -- S2.1. Vier-daagse cursussen
 --
