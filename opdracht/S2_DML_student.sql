@@ -31,27 +31,27 @@
 --
 -- Geef code en omschrijving van alle cursussen die precies vier dagen duren.
 -- DROP VIEW IF EXISTS s2_1; CREATE OR REPLACE VIEW s2_1 AS                                                     -- [TEST]
-
+select code,omschrijving from cursussen where lengte = 4
 
 -- S2.2. Medewerkersoverzicht
 --
 -- Geef alle informatie van alle medewerkers, gesorteerd op functie,
 -- en per functie op leeftijd (van jong naar oud).
 -- DROP VIEW IF EXISTS s2_2; CREATE OR REPLACE VIEW s2_2 AS                                                     -- [TEST]
-
+select * from medewerkers order by functie, gbdatum desc
 
 -- S2.3. Door het land
 --
 -- Welke cursussen zijn in Utrecht en/of in Maastricht uitgevoerd? Geef
 -- code en begindatum.
 -- DROP VIEW IF EXISTS s2_3; CREATE OR REPLACE VIEW s2_3 AS                                                     -- [TEST]
-
+select cursus, begindatum from uitvoeringen where locatie='UTRECHT' or locatie='MAASTRICHT'
 
 -- S2.4. Namen
 --
 -- Geef de naam en voorletters van alle medewerkers, behalve van R. Jansen.
 -- DROP VIEW IF EXISTS s2_4; CREATE OR REPLACE VIEW s2_4 AS                                                     -- [TEST]
-
+select naam, voorl from medewerkers where voorl <> 'R' or naam <> 'JANSEN'
 
 -- S2.5. Nieuwe SQL-cursus
 --
@@ -60,7 +60,7 @@
 -- Voeg deze gegevens toe.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-
+insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('S02','2021-03-02',7902,'Leerdam')
 
 -- S2.6. Stagiairs
 --
@@ -68,7 +68,7 @@ ON CONFLICT DO NOTHING;                                                         
 -- voer zijn of haar gegevens in. Kies een personeelnummer boven de 8000.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-
+insert into medewerkers(mnr, naam, voorl, functie, chef, gbdatum, maandsal,comm,afd,geslacht) values(8001,'RIEZEBOS','N','STAGAIR',null,'2000-03-22',0,null,10,'M')
 
 -- S2.7. Nieuwe schaal
 --
@@ -76,6 +76,10 @@ ON CONFLICT DO NOTHING;                                                         
 -- tussen de 3001 en 4000 euro verdienen. Zij krijgen een toelage van 500 euro.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
+Aangezien er al een schaal was kon je updaten, door dit te doen:
+update schalen set bovengrens=4000 where snr=5
+    anders was het:
+insert into schalen(snr,ondergrens,bovengrens,toelage) values (6, 3001,4000, 500)
 
 
 -- S2.8. Nieuwe cursus
@@ -94,7 +98,14 @@ ON CONFLICT DO NOTHING;                                                         
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
 INSERT
-ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
+ON CONFLICT DO NOTHING;
+-- [TEST]
+insert into cursussen(code, omschrijving, type, lengte) values ('D&P','Data en Persistency', 'ALG', 6)
+    insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('D&P', '2021-03-03', 7902, 'LEERDAM')
+insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('D&P', '2021-03-04', 7902, 'LEERDAM')
+insert into inschrijvingen(cursist,cursus,begindatum,evaluatie) values (7499,'D&P','2021-03-04',null )
+insert into inschrijvingen(cursist,cursus,begindatum,evaluatie) values (7934,'D&P','2021-03-04',null )
+insert into inschrijvingen(cursist,cursus,begindatum,evaluatie) values (7698,'D&P','2021-03-03',null )
 
 
 -- S2.9. Salarisverhoging
@@ -102,6 +113,8 @@ ON CONFLICT DO NOTHING;                                                         
 -- De medewerkers van de afdeling VERKOOP krijgen een salarisverhoging
 -- van 5.5%, behalve de manager van de afdeling, deze krijgt namelijk meer: 7%.
 -- Voer deze verhogingen door.
+update medewerkers set maandsal = (maandsal *1.07) where functie = 'MANAGER'
+update medewerkers set maandsal = (maandsal *1.055) where functie <> 'MANAGER'
 
 
 -- S2.10. Concurrent
@@ -111,6 +124,9 @@ ON CONFLICT DO NOTHING;                                                         
 
 -- Zijn collega Alders heeft ook plannen om te vertrekken. Verwijder ook zijn gegevens.
 -- Waarom lukt dit (niet)?
+delete from medewerkers where naam='MARTENS'
+delete from medewerkers where naam= 'ALDERS'
+    ERROR: update or delete on table "medewerkers" violates foreign key constraint "a_hoofd_fk" on table "afdelingen" DETAIL: Key (mnr)=(7499) is still referenced from table "afdelingen". SQL state: 23503
 
 
 -- S2.11. Nieuwe afdeling
@@ -123,7 +139,7 @@ ON CONFLICT DO NOTHING;                                                         
 
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-
+delete from medewerkers where naam= 'ALDERS'
 
 
 -- -------------------------[ HU TESTRAAMWERK ]--------------------------------

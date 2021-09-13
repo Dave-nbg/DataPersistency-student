@@ -34,6 +34,9 @@
 -- die ervoor zorgt dat alleen 'M' of 'V' als geldige waarde wordt
 -- geaccepteerd. Test deze regel en neem de gegooide foutmelding op als
 -- commentaar in de uitwerking.
+ALTER TABLE medewerkers
+    ADD COLUMN geslacht char(1) CONSTRAINT m_geslacht_chk CHECK (geslacht='M' OR geslacht='V');
+new row for relation "medewerkers" violates check constraint "m_geslacht_chk"
 
 
 -- S1.2. Nieuwe afdeling
@@ -43,6 +46,8 @@
 -- nieuwe medewerker A DONK aangenomen. Hij krijgt medewerkersnummer 8000
 -- en valt direct onder de directeur.
 -- Voeg de nieuwe afdeling en de nieuwe medewerker toe aan de database.
+insert into medewerkers(mnr, naam, voorl,functie, gbdatum, maandsal) VALUES (8000, 'DONK', 'A', 'ONDERZOEK', '1981-02-20', 10)
+insert into afdelingen(anr,naam,locatie,hoofd) values (50,'ONDERZOEK', 'ZWOLLE', 8000)
 
 
 -- S1.3. Verbetering op afdelingentabel
@@ -54,6 +59,17 @@
 --      de nieuwe sequence.
 --   c) Op enig moment gaat het mis. De betreffende kolommen zijn te klein voor
 --      nummers van 3 cijfers. Los dit probleem op.
+CREATE SEQUENCE verhogingen
+    INCREMENT 10
+START 60
+MINVALUE 1
+MAXVALUE 2147483647
+CACHE 1;
+insert into afdelingen(anr,naam,locatie,hoofd) VALUES (nextval('verhogingen'), 'TESTERS', 'GRONINGEN', 7499 )
+    insert into afdelingen(anr,naam,locatie,hoofd) VALUES (nextval('verhogingen'), 'TESTERS2', 'AFGAANSTAD', 7499 )
+insert into afdelingen(anr,naam,locatie,hoofd) VALUES (nextval('verhogingen'), 'TESTERS3', 'INLEVERSTAD', 7499 )
+insert into afdelingen(anr,naam,locatie,hoofd) VALUES (nextval('verhogingen'), 'TESTERS4', 'TESTSTAD', 7499 )
+ALTER TABLE afdelingen ALTER COLUMN anr type numeric(3,0)
 
 
 -- S1.4. Adressen
@@ -68,6 +84,21 @@
 --    einddatum     moet na de ingangsdatum liggen
 --    telefoon      10 cijfers, uniek
 --    med_mnr       FK, verplicht
+create table adressen(
+                         postcode char(6),
+                         huisnummer integer,
+                         ingangsdatum DATE,
+                         einddatum DATE CONSTRAINT chk_Dates CHECK (ingangsdatum < einddatum)
+                             telefoon integer constraint unique_phone check (telefoon< 999999999) UNIQUE,
+                         med_nr integer NOT NULL unique ,
+                         ADD CONSTRAINT "pc_hnr_ing_pk" PRIMARY KEY (postcode,huisnummer,ingangsdatum);
+,
+   CONSTRAINT fk_med_nr
+      FOREIGN KEY(med_nr)
+	  REFERENCES adressen(med_nr)
+);
+-- kunnen geen 3 pk, dus heb de 3 als 1 pk
+insert into adressen(postcode,huisnummer,ingangsdatum,einddatum,telefoon,med_nr) VALUES ('7832JC', 1, '2001-09-28', '2001-09-29' , '45994561', 8000)
 
 
 -- S1.5. Commissie
