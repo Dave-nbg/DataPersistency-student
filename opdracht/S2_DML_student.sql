@@ -60,7 +60,8 @@ select naam, voorl from medewerkers where voorl <> 'R' or naam <> 'JANSEN'
 -- Voeg deze gegevens toe.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('S02','2021-03-02',7902,'Leerdam')
+insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('S02','2021-03-02',7369,'Leerdam')
+
 
 -- S2.6. Stagiairs
 --
@@ -68,7 +69,7 @@ insert into uitvoeringen(cursus, begindatum, docent, locatie) values ('S02','202
 -- voer zijn of haar gegevens in. Kies een personeelnummer boven de 8000.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-insert into medewerkers(mnr, naam, voorl, functie, chef, gbdatum, maandsal,comm,afd,geslacht) values(8001,'RIEZEBOS','N','STAGAIR',null,'2000-03-22',0,null,10,'M')
+insert into medewerkers(mnr, naam, voorl, functie, chef, gbdatum, maandsal,comm,afd) values(8001,'RIEZEBOS','N','STAGIAIR',null,'2000-03-22',0,null,10)
 
 -- S2.7. Nieuwe schaal
 --
@@ -76,9 +77,8 @@ insert into medewerkers(mnr, naam, voorl, functie, chef, gbdatum, maandsal,comm,
 -- tussen de 3001 en 4000 euro verdienen. Zij krijgen een toelage van 500 euro.
 INSERT
 ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
-Aangezien er al een schaal was kon je updaten, door dit te doen:
-update schalen set bovengrens=4000 where snr=5
-    anders was het:
+--Aangezien er al een schaal was kon je updaten, door dit te doen:
+
 insert into schalen(snr,ondergrens,bovengrens,toelage) values (6, 3001,4000, 500)
 
 
