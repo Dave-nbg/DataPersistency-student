@@ -35,18 +35,20 @@ select mnr, functie, gbdatum from medewerkers where gbdatum < '1980-01-01'::date
 -- S4.2.
 -- Geef de naam van de medewerkers met een tussenvoegsel (b.v. 'van der').
 -- DROP VIEW IF EXISTS s4_2; CREATE OR REPLACE VIEW s4_2 AS                                                     -- [TEST]
-select * from medewerkers where naam like '% %'
+select naam from medewerkers where naam like '% %'
 
 -- S4.3.
 -- Geef nu code, begindatum en aantal inschrijvingen (`aantal_inschrijvingen`) van alle
 -- cursusuitvoeringen in 2019 met minstens drie inschrijvingen.
 -- DROP VIEW IF EXISTS s4_3; CREATE OR REPLACE VIEW s4_3 AS                                                     -- [TEST]
+SELECT cursus as code,begindatum, count(cursus) as aantal_inschrijvingen FROM inschrijvingen group by cursus, begindatum having sum(cursist) > 3
 
 
 -- S4.4.
 -- Welke medewerkers hebben een bepaalde cursus meer dan één keer gevolgd?
 -- Geef medewerkernummer en cursuscode.
 -- DROP VIEW IF EXISTS s4_4; CREATE OR REPLACE VIEW s4_4 AS                                                     -- [TEST]
+select cursist, cursus from inschrijvingen group by cursus, cursist having sum(cursist) > 1
 
 
 -- S4.5.
@@ -59,7 +61,8 @@ select * from medewerkers where naam like '% %'
 --   JAV    | 4
 --   OAG    | 2
 -- DROP VIEW IF EXISTS s4_5; CREATE OR REPLACE VIEW s4_5 AS                                                     -- [TEST]
-
+SELECT cursus, count (cursus) AS uitvoeringen
+FROM uitvoeringen group by cursus
 
 -- S4.6.
 -- Bepaal hoeveel jaar leeftijdsverschil er zit tussen de oudste en de
@@ -67,7 +70,8 @@ select * from medewerkers where naam like '% %'
 -- de medewerkers (`gemiddeld`).
 -- Je mag hierbij aannemen dat elk jaar 365 dagen heeft.
 -- DROP VIEW IF EXISTS s4_6; CREATE OR REPLACE VIEW s4_6 AS                                                     -- [TEST]
-
+select (max(gbdatum)- min(gbdatum))/365 as verschil_in_jaar, avg(AGE(now(),gbdatum))  as gemiddelde_leeftijd from medewerkers
+-- kijk video
 
 -- S4.7.
 -- Geef van het hele bedrijf een overzicht van het aantal medewerkers dat
