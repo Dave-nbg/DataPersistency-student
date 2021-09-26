@@ -41,14 +41,14 @@ select naam from medewerkers where naam like '% %'
 -- Geef nu code, begindatum en aantal inschrijvingen (`aantal_inschrijvingen`) van alle
 -- cursusuitvoeringen in 2019 met minstens drie inschrijvingen.
 -- DROP VIEW IF EXISTS s4_3; CREATE OR REPLACE VIEW s4_3 AS                                                     -- [TEST]
-SELECT cursus as code,begindatum, count(cursus) as aantal_inschrijvingen FROM inschrijvingen group by cursus, begindatum having sum(cursist) > 3
+SELECT cursus as code,begindatum, count(cursus) as aantal_inschrijvingen FROM inschrijvingen group by cursus, begindatum having count(cursus) >= 3
 
 
 -- S4.4.
 -- Welke medewerkers hebben een bepaalde cursus meer dan één keer gevolgd?
 -- Geef medewerkernummer en cursuscode.
 -- DROP VIEW IF EXISTS s4_4; CREATE OR REPLACE VIEW s4_4 AS                                                     -- [TEST]
-select cursist, cursus from inschrijvingen group by cursus, cursist having sum(cursist) > 1
+select cursist, cursus from inschrijvingen group by cursus, cursist having count(cursist) > 1
 
 
 -- S4.5.
@@ -79,6 +79,7 @@ select (max(gbdatum)- min(gbdatum))/365 as verschil_in_jaar, avg(AGE(now(),gbdat
 -- krijgen (`commissie_medewerkers`), en hoeveel dat gemiddeld
 -- per verkoper is (`commissie_verkopers`).
 -- DROP VIEW IF EXISTS s4_7; CREATE OR REPLACE VIEW s4_7 AS                                                     -- [TEST]
+select count(mnr) as aantal_medewerkers, sum(comm)/count(mnr) as comissie_medewerkers,  avg(comm) as commissie_verkopers from medewerkers
 
 
 
