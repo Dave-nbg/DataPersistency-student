@@ -41,7 +41,7 @@ select naam from medewerkers where naam like '% %'
 -- Geef nu code, begindatum en aantal inschrijvingen (`aantal_inschrijvingen`) van alle
 -- cursusuitvoeringen in 2019 met minstens drie inschrijvingen.
 -- DROP VIEW IF EXISTS s4_3; CREATE OR REPLACE VIEW s4_3 AS                                                     -- [TEST]
-SELECT cursus as code,begindatum, count(cursus) as aantal_inschrijvingen FROM inschrijvingen group by cursus, begindatum having count(cursus) >= 3
+SELECT cursus as code,begindatum, count(cursus) as aantal_inschrijvingen FROM inschrijvingen group by cursus, begindatum having count(begindatum) >= 3 and begindatum < '2020-1-1'
 
 
 -- S4.4.
