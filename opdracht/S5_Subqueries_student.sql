@@ -78,6 +78,7 @@ select m.voorl, m.naam from medewerkers m, uitvoeringen u, cursussen c, inschrij
 -- S5.8.
 -- Geef de naam van de medewerkers die nog nooit een cursus hebben gegeven.
 -- DROP VIEW IF EXISTS s5_8; CREATE OR REPLACE VIEW s5_8 AS                                                     -- [TEST]
+select m.naam from medewerkers m where m.mnr not in (select u.docent from uitvoeringen u where m.mnr = u.docent)
 
 
 
