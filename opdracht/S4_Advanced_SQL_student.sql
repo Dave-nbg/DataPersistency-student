@@ -79,7 +79,7 @@ select (max(gbdatum)- min(gbdatum))/365 as verschil_in_jaar, avg(AGE(now(),gbdat
 -- krijgen (`commissie_medewerkers`), en hoeveel dat gemiddeld
 -- per verkoper is (`commissie_verkopers`).
 -- DROP VIEW IF EXISTS s4_7; CREATE OR REPLACE VIEW s4_7 AS                                                     -- [TEST]
-select count(mnr) as aantal_medewerkers, sum(comm)/count(mnr) as comissie_medewerkers,  avg(comm) as commissie_verkopers from medewerkers
+select count(mnr) as aantal_medewerkers, sum(comm)/count(mnr) as comissie_medewerkers, avg(coalesce(comm,0)) avg(comm) as commissie_verkopers from medewerkers
 
 
 

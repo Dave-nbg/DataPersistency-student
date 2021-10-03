@@ -32,19 +32,19 @@
 -- Welke medewerkers hebben zowel de Java als de XML cursus
 -- gevolgd? Geef hun personeelsnummers.
 -- DROP VIEW IF EXISTS s5_1; CREATE OR REPLACE VIEW s5_1 AS                                                     -- [TEST]
-
+select cursist from inschrijvingen where cursus = 'XML' and cursist in (select cursist from inschrijvingen where cursus = 'JAV')
 
 -- S5.2.
 -- Geef de nummers van alle medewerkers die niet aan de afdeling 'OPLEIDINGEN'
 -- zijn verbonden.
 -- DROP VIEW IF EXISTS s5_2; CREATE OR REPLACE VIEW s5_2 AS                                                     -- [TEST]
-
+select mnr from medewerkers where afd not in (select anr from afdelingen where naam = 'OPLEIDINGEN' )
 
 -- S5.3.
 -- Geef de nummers van alle medewerkers die de Java-cursus niet hebben
 -- gevolgd.
 -- DROP VIEW IF EXISTS s5_3; CREATE OR REPLACE VIEW s5_3 AS                                                     -- [TEST]
-
+select m.mnr from medewerkers m where m.mnr not in (select cursist from inschrijvingen where cursus = 'JAV')
 
 -- S5.4.
 -- a. Welke medewerkers hebben ondergeschikten? Geef hun naam.
@@ -52,12 +52,13 @@
 
 -- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam.
 -- DROP VIEW IF EXISTS s5_4b; CREATE OR REPLACE VIEW s5_4b AS                                                   -- [TEST]
-
+Select m.mnr from medewerkers m Where m.mnr not in select distinct (chef) from medewerkers  where chef = mnr
 
 -- S5.5.
 -- Geef cursuscode en begindatum van alle uitvoeringen van programmeercursussen
 -- ('BLD') in 2020.
 -- DROP VIEW IF EXISTS s5_5; CREATE OR REPLACE VIEW s5_5 AS                                                     -- [TEST]
+select u.cursus, u.begindatum from uitvoeringen u, cursussen c where c.code = u.cursus and c.type = 'BLD' and u.begindatum > '2020-01-01'::Date
 
 
 -- S5.6.
