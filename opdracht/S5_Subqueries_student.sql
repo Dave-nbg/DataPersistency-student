@@ -49,10 +49,10 @@ select m.mnr from medewerkers m where m.mnr not in (select cursist from inschrij
 -- S5.4.
 -- a. Welke medewerkers hebben ondergeschikten? Geef hun naam.
 -- DROP VIEW IF EXISTS s5_4a; CREATE OR REPLACE VIEW s5_4a AS                                                   -- [TEST]
-
+Select m.mnr from medewerkers m Where m.mnr not in select distinct (chef) from medewerkers  where chef = mnr
 -- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam.
 -- DROP VIEW IF EXISTS s5_4b; CREATE OR REPLACE VIEW s5_4b AS                                                   -- [TEST]
-Select m.mnr from medewerkers m Where m.mnr not in select distinct (chef) from medewerkers  where chef = mnr
+
 
 -- S5.5.
 -- Geef cursuscode en begindatum van alle uitvoeringen van programmeercursussen
@@ -64,14 +64,16 @@ select u.cursus, u.begindatum from uitvoeringen u, cursussen c where c.code = u.
 -- S5.6.
 -- Geef van alle cursusuitvoeringen: de cursuscode, de begindatum en het
 -- aantal inschrijvingen (`aantal_inschrijvingen`). Sorteer op begindatum.
--- DROP VIEW IF EXISTS s5_6; CREATE OR REPLACE VIEW s5_6 AS                                                     -- [TEST]
+-- DROP VIEW IF EXISTS s5_6; CREATE OR REPLACE VIEW s5_6 AS                                                     [TEST]
+--todo bekijk dat er inschrijvingen zijn die niet in mijn lijst zitten
+select cursus, begindatum, count(begindatum) as aantal_inschrijvingen from inschrijvingen group by begindatum, cursus
 
 
 -- S5.7.
 -- Geef voorletter(s) en achternaam van alle trainers die ooit tijdens een
 -- algemene ('ALG') cursus hun eigen chef als cursist hebben gehad.
 -- DROP VIEW IF EXISTS s5_7; CREATE OR REPLACE VIEW s5_7 AS                                                     -- [TEST]
-
+select m.voorl, m.naam from medewerkers m, uitvoeringen u, cursussen c, inschrijvingen i where c.code = u.cursus and u.docent = m.mnr and c.type = 'ALG' and m.chef = i.cursist and u.cursus = i.cursus group by m.naam, m.voorl
 
 -- S5.8.
 -- Geef de naam van de medewerkers die nog nooit een cursus hebben gegeven.
