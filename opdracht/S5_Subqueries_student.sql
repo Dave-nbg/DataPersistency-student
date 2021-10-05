@@ -49,9 +49,10 @@ select m.mnr from medewerkers m where m.mnr not in (select cursist from inschrij
 -- S5.4.
 -- a. Welke medewerkers hebben ondergeschikten? Geef hun naam.
 -- DROP VIEW IF EXISTS s5_4a; CREATE OR REPLACE VIEW s5_4a AS                                                   -- [TEST]
-Select m.mnr from medewerkers m Where m.mnr not in select distinct (chef) from medewerkers  where chef = mnr
+Select m.naam from medewerkers m where m.mnr in (select distinct (chef) from medewerkers where m.mnr = chef)
 -- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam.
 -- DROP VIEW IF EXISTS s5_4b; CREATE OR REPLACE VIEW s5_4b AS                                                   -- [TEST]
+Select m.naam from medewerkers m where m.mnr not in (select distinct (chef) from medewerkers where m.mnr = chef)
 
 
 -- S5.5.
